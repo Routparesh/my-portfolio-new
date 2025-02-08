@@ -30,13 +30,16 @@ phases:
       - echo Packaging application into a zip file...
       - zip -r my-portfolio-app.zip * .[^.]* # Include all files and directories, including hidden files
 
-
   post_build:
     commands:
-    
-      - echo Uploading zip file to S3 root location...
-      - aws s3 cp my-portfolio-app.zip s3://aws-my-portfolio-app-cicd/my-portfolio-app/ # Upload zip file to the root of the bucket
-      
+      - echo Uploading zip file to S3...
+      - |
+        if aws s3 ls s3://my-portfolio-artifacts 2>&1 | grep -q 'NoSuchBucket'
+        then
+          echo "Creating S3 bucket my-portfolio-artifacts"
+          aws s3 mb s3://my-portfolio-artifacts --region ap-south-1
+        fi
+      - aws s3 cp my-portfolio-app.zip s3://my-portfolio-artifacts/builds/
 
 artifacts:
   files:
