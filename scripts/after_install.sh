@@ -7,7 +7,7 @@ chmod -R 755 /var/www/html
 # Create nginx configuration if it doesn't exist
 cat > /etc/nginx/sites-available/portfolio << 'EOF'
 server {
-    listen 80;
+    listen 3000;
     server_name _;
     root /var/www/html;
     index index.html;
@@ -15,6 +15,11 @@ server {
     location / {
         try_files $uri $uri/ /index.html;
     }
+
+    # Enable CORS
+    add_header 'Access-Control-Allow-Origin' '*';
+    add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+    add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range';
 
     error_page 404 /404.html;
     error_page 500 502 503 504 /50x.html;
