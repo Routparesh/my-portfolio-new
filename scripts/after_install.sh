@@ -14,18 +14,21 @@ server {
     access_log /var/log/nginx/portfolio_access.log;
     error_log /var/log/nginx/portfolio_error.log;
 
-    root /var/www/html;
+    root /var/www/html/build;
     index index.html;
 
     location / {
         try_files $uri $uri/ /index.html;
-        autoindex on;
     }
 
     # Enable CORS
     add_header 'Access-Control-Allow-Origin' '*';
     add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
     add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range';
+
+    # Error pages
+    error_page 404 /index.html;
+    error_page 500 502 503 504 /50x.html;
 }
 EOF
 
@@ -37,13 +40,12 @@ rm -f /etc/nginx/sites-enabled/default
 mkdir -p /var/log/nginx
 chown -R www-data:adm /var/log/nginx
 
+# Ensure the build directory exists
+mkdir -p /var/www/html/build
+
 # Test nginx configuration
 nginx -t
 
 # Debug info
-echo "Directory contents:"
-ls -la /var/www/html
-echo "Nginx configuration:"
-cat /etc/nginx/sites-available/portfolio
-echo "Nginx user:"
-ps aux | grep nginx
+echo "Directory contents of build folder:"
+ls -la /var/www/html/build

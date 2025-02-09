@@ -17,16 +17,14 @@ phases:
 
   pre_build:
     commands:
-      - echo Logging in to Docker Registry...
-      - echo "$DOCKER_REGISTRY_PASSWORD" | docker login -u "$DOCKER_REGISTRY_USERNAME" --password-stdin "$DOCKER_REGISTRY_URL"
-      - export IMAGE_REPO_NAME=aws-my-portfolio-app-cicd
-      - export REPOSITORY_URI=$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME
-      - export IMAGE_TAG=v1
-      - echo Building image $REPOSITORY_URI/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - echo Installing dependencies...
+      - npm install
 
   build:
     commands:
       - echo Build started on `date`
+      - echo Building React application...
+      - npm run build
       - echo Packaging application into a zip file...
       - zip -r my-portfolio-app.zip * .[^.]* # Include all files and directories, including hidden files
 
@@ -44,7 +42,7 @@ phases:
 artifacts:
   files:
     - '**/*'
-  base-directory: '.'
+  base-directory: 'build'
   discard-paths: no
   exclude-patterns:
     - 'node_modules/**/*'
