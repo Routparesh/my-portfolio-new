@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Set proper permissions
-chown -R nginx:nginx /var/www/html
+chown -R www-data:www-data /var/www/html
 chmod -R 755 /var/www/html
 
 # Create nginx configuration if it doesn't exist
-cat > /etc/nginx/conf.d/portfolio.conf << 'EOF'
+cat > /etc/nginx/sites-available/portfolio << 'EOF'
 server {
     listen 80;
     server_name _;
@@ -20,3 +20,10 @@ server {
     error_page 500 502 503 504 /50x.html;
 }
 EOF
+
+# Enable the site configuration
+ln -sf /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/
+rm -f /etc/nginx/sites-enabled/default
+
+# Test nginx configuration
+nginx -t
