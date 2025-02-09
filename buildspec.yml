@@ -34,12 +34,12 @@ phases:
     commands:
       - echo Uploading zip file to S3...
       - |
-        if aws s3 ls s3://my-portfolio-artifacts 2>&1 | grep -q 'NoSuchBucket'
+        if aws s3 ls s3://my-portfolio-artifact 2>&1 | grep -q 'NoSuchBucket'
         then
-          echo "Creating S3 bucket my-portfolio-artifacts"
-          aws s3 mb s3://my-portfolio-artifacts --region ap-south-1
+          echo "Creating S3 bucket my-portfolio-artifact"
+          aws s3 mb s3://my-portfolio-artifact --region ap-south-1
         fi
-      - aws s3 cp my-portfolio-app.zip s3://my-portfolio-artifacts/builds/
+      - aws s3 cp my-portfolio-app.zip s3://my-portfolio-artifact/builds/
 
 artifacts:
   files:
